@@ -3,6 +3,18 @@
 (tooltip-mode -1)
 (menu-bar-mode -1)
 
+;; enable recent files -- enables function recentf-open-files -- counsel-recentf
+(recentf-mode 1)
+
+;; remember and restore cursor place in files
+(save-place-mode 1)
+
+;; enable history for all minibuffer prompts
+(savehist-mode 1)
+
+;; autoreload file if it changes outside of buffer/emacs on disc
+(global-auto-revert-mode 1)
+
 (set-default-coding-systems 'utf-8)
 
 (set-face-attribute 'default nil :font "JetBrains Mono")
@@ -48,7 +60,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; menus for everything important
+;; enhanced menus for everything important
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -67,18 +79,33 @@
   :init
   (ivy-mode 1))
 
-;; improves some standard functions
-(use-package counsel
-  :init (counsel-mode 1) ; auto remaps all standard functions to counsel functions
-  :config
-  (setq ivy-initial-inputs-alist nil)) ; removes the dumb ^ from the prompts 
+;; give ivy menus fancy icons
+(use-package all-the-icons-ivy-rich
+  :after counsel-projectile
+  :init (all-the-icons-ivy-rich-mode 1))
 
 ;; keybindings and doc-strings in ivy-menus
 (use-package ivy-rich
+  :after all-the-icons-ivy-rich
   :init (ivy-rich-mode 1))
 
 ;; better search - plug in to ivy
 (use-package swiper)
+
+;; improves some standard functions
+(use-package counsel
+  :init (counsel-mode 1) ; auto remaps all standard functions to counsel functions
+  :config
+  (setq ivy-initial-inputs-alist nil)) ; removes the dumb ^ from the prompts
+
+;; sort suggestions and completions based on usage
+(use-package ivy-prescient
+  :after counsel
+  :config
+  (prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
+(setq prescient-sort-length-enable nil)
+(setq ivy-prescient-retain-classic-highlighting t)
 
 ;; better documentation
 (use-package helpful
@@ -144,7 +171,8 @@
     :global-prefix "C-SPC") ;; works everywhere
   (rune/leader-keys  ;; mostly an example
     "t" '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose-theme")))
+    "tt" '(counsel-load-theme :which-key "choose-theme")
+    "b" '(counsel-switch-buffer :which-key "switch buffer")))
 
 
 ;; transient keymaps
@@ -184,6 +212,33 @@
   :config
   (evil-collection-init))
 
+;; advanced project management
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/Projects/Code")
+    (setq projectile-project-search-path '("~/Projects/Code")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+;; integrate projectile with counsel
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
+
+(use-package magit
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+;; look into the forge package for better git integration
+
+(use-package evil-nerd-commenter
+  :bind ("M-ö" . evilnc-comment-or-uncomment-lines))
+
 ;; Common Lisp setup
 (use-package slime)
 (setq inferior-lisp-program "/usr/bin/sbcl")
@@ -191,19 +246,12 @@
 ;; Lua setup
 (use-package lua-mode)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(column-number-mode t)
- '(cua-mode t nil (cua-base))
- '(ivy-mode t)
- '(package-selected-packages
-   '(hydra general evil-collection evil all-the-icons-dired emojify lua-mode slime helpful counsel ivy-rich which-key rainbow-delimiters doom-themes doom-modeline ivy use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(use-package yaml-mode)
+
+;; move custom variables to extra file
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'no-error 'nomessage)
+
+(use-package org)
+
+;; to install:: company-prescient lsp-mode lsp-ui company company-slime treemacs

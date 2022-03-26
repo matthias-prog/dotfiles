@@ -92,6 +92,7 @@ window:
   # Override the variant of the GTK theme. Commonly supported values are `dark`
   # and `light`. Set this to `None` to use the default theme variant.
   #gtk_theme_variant: None
+  opacity: 0.95
 
 scrolling:
   # Maximum number of lines in the scrollback buffer.
@@ -111,10 +112,11 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: Jetbrains Mono
+    #family: Jetbrains Mono
+    family: IBM 3270
 
     # The `style` can be specified to pick a specific face.
-    style: Regular Nerd Font
+    style: Regular #Nerd Font
 
   # Bold font face
   bold:
@@ -122,10 +124,11 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Jetbrains Mono
+    #family: Jetbrains Mono
+    family: IBM 3270
 
     # The `style` can be specified to pick a specific face.
-    style: Bold Nerd Font
+    #style: Bold Nerd Font
 
   # Italic font face
   italic:
@@ -133,10 +136,11 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Jetbrains Mono
+    #family: Jetbrains Mono
+    family: IBM 3270
 
     # The `style` can be specified to pick a specific face.
-    style: Italic Nerd Font
+    #style: Italic Nerd Font
 
   # Bold italic font face
   bold_italic:
@@ -144,13 +148,14 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Jetbrains Mono
+    #family: Jetbrains Mono
+    family: IBM 3270
 
     # The `style` can be specified to pick a specific face.
-    style: Bold Italic Nerd Font
+    #style: Bold Italic Nerd Font
 
   # Point size
-  size: 11.0
+  size: 12.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -357,7 +362,7 @@ colors:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.95
+# background_opacity: 0.95
 
 #selection:
   # This string contains all characters that are used as separators for
